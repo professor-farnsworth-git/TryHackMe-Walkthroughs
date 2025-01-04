@@ -1,5 +1,7 @@
 # Test Box Walkthrough
 
+Insert the box image here
+
 ## Overview
 ### Platform: Tryhackme
 ### Box Name: Test Box
