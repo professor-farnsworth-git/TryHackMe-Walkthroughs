@@ -12,7 +12,7 @@ The following articles will provide information on completing some boxes found o
 
 | Box Name           | Type    | Difficulty                | Description                                                                                  | Tools                              |
 |--------------------|---------|---------------------------|----------------------------------------------------------------------------------------------|------------------------------------|
-| Just SSH           | Linux   | Easy-medium               | Compromise a SSH Server using common attack vectors outlined by MITRE ATT&CK Framework.      | NMAP, Hydra, ssh2John, john/hashcat|
+| [Just SSH](Rooms/Just-SSH)           | Linux   | Easy-medium               | Compromise a SSH Server using common attack vectors outlined by MITRE ATT&CK Framework.      | NMAP, Hydra, ssh2John, john/hashcat|
                                               
 ---
 
