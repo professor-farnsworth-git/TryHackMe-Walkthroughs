@@ -10,11 +10,12 @@ Insert the box image here
 ---
 ## Recon and Enumeration (MITRE ATT&CK Outline)
 
-| Techniqe ID                 | Name                          | Tool Used                   |
+| Techniqe ID                 | Name                          | Tool(s) Used                |
 |-----------------------------|-------------------------------|-----------------------------|
 | [T1595](https://attack.mitre.org/techniques/T1595/)                       | Active Scanning               | NMAP                        |
 | [T1592](https://attack.mitre.org/techniques/T1592/)                       | Gather Victim Host Information | NMAP                       |
-| [T1591](https://attack.mitre.org/techniques/T1591/)                       | Gather Vicitm Org Information | Breached Creds, Personnel Roster |
+| [T1591](https://attack.mitre.org/techniques/T1591/)                       | Gather Vicitm Org Information | ssh -v |
+| [T1589](https://attack.mitre.org/techniques/T1589/)                       | Gather Victim Identify Information | Breached Creds, Personnel Roster |
 
 ### Enumeration
 Run NMAP to discover open ports:
@@ -30,7 +31,7 @@ sudo nmap $ip -p- -Pn -n -T5
 ---
 ## Initial Access (MITRE ATT&CK Outline)
 
-| Techniqe ID                 | Name                          | Tool Used                   |
+| Techniqe ID                 | Name                          | Tool(s) Used                |
 |-----------------------------|-------------------------------|-----------------------------|
 | [T1078](https://attack.mitre.org/techniques/T1078/)    | Valid Accounts    |  Hydra, SSH  |
 | [T1110](https://attack.mitre.org/techniques/T1110/004/)   |  Credential Stuffing   |  Hydra   |
@@ -45,7 +46,13 @@ hydra -L users.txt -P breachedCreds.txt $ip ssh
 SSH Password credentials identified: j_moore : somePassword123
 ---
 ---
-## Lateral Movement
+## Lateral Movement (MITRE ATT&CK Outline)
+
+| Techniqe ID                 | Name                          | Tool(s) Used                |
+|-----------------------------|-------------------------------|-----------------------------|
+| [T1021](https://attack.mitre.org/techniques/T1021/004/)    | Remote Services    | SSH    |
+| [T1552](https://attack.mitre.org/techniques/T1552/)    | Unsecured Credentials    | Manual Enumeration / LinPEAS.sh    |
+| [T1110](https://attack.mitre.org/techniques/T1110/003/)    | Password Spraying    | NMAP Scripting Engine    |
 
 ### j_moore to sftp
 j_moore's profile had exisitng id_rsa private and pub keys. The private key was sprayed
@@ -66,6 +73,17 @@ account. Confirm the credentials by logging into the sftp service.
 sftp -i id_rsa sftp@$ip
 ```
 enter the passphrase for j_moore's id_rsa, and check your id.
+---
+---
+
+## Privilege Escalation (MITRE ATT&CK Outline)
+
+| Techniqe ID                 | Name                          | Tool(s) Used                |
+|-----------------------------|-------------------------------|-----------------------------|
+| [T1548](https://attack.mitre.org/techniques/T1548/003/)    | Abuse Elevation Control Mechanism    | Sudo Privileges
+| [T1556](https://attack.mitre.org/techniques/T1556/)    | Modify Authentication Process    | /etc/ssh/sshd_config
+| [T1110](https://attack.mitre.org/techniques/T1110/004/)    | Credential Stuffing    | hydra    |
+
 
 ### sftp to net-admin
 With valid credentials we can enumerate the sftp service and sift through the documents for pertinent 
