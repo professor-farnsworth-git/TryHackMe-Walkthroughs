@@ -1,4 +1,4 @@
-# Just SSH Manual Walkthrough
+# Just SSH Walkthrough
 
 Insert the box image here
 
