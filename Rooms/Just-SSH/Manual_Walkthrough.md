@@ -18,15 +18,69 @@ Insert the box image here
 | [T1589](https://attack.mitre.org/techniques/T1589/)                       | Gather Victim Identify Information | Breached Creds, Personnel Roster |
 
 ### Enumeration
-Run NMAP to discover open ports:
+Run NMAP to discover what ports are open on the target:
 ```bash
-sudo nmap $ip -Pn -n
+sudo nmap $ip -Pn -n -oA discScan
 ```
+```bash         
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-05 00:41 EST
+Nmap scan report for 10.10.43.128
+Host is up (0.21s latency).
+Not shown: 999 closed tcp ports (reset)
+PORT   STATE SERVICE
+22/tcp open  ssh
 
-Port 22 (SSH) was the only open port, and confirmed with the all ports scan:
-```bash
-sudo nmap $ip -p- -Pn -n -T5
+Nmap done: 1 IP address (1 host up) scanned in 2.47 seconds
 ```
+Use SSH's debug mode to identify the pertinent information to the server:  
+- protocol
+- Version of SSH  
+- Banner Information (if present)  
+- Authentication Methods  
+- Acceptable Keys for Authentication
+
+
+```bash
+ssh -v $ip
+```
+```bash
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.10
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+
+**************************************************************************
+*                           Nexora Solutions                             *
+*                    Secure Shell (SSH) Access Portal                    *
+**************************************************************************
+
+NOTICE: This system is for authorized use only. Unauthorized access or use 
+is prohibited and may result in disciplinary action and/or civil and 
+criminal penalties. All activities on this system are monitored and 
+recorded. 
+
+For assistance, contact:
+  support@nexora-solutions.com
+  j_davis@nexora-solutions.com
+
+debug1: Authentications that can continue: publickey,password
+debug1: Will attempt key: /home/not-root/.ssh/id_rsa 
+debug1: Will attempt key: /home/not-root/.ssh/id_ecdsa 
+debug1: Will attempt key: /home/not-root/.ssh/id_ecdsa_sk 
+debug1: Will attempt key: /home/not-root/.ssh/id_ed25519 
+debug1: Will attempt key: /home/not-root/.ssh/id_ed25519_sk 
+debug1: Will attempt key: /home/not-root/.ssh/id_xmss 
+
+```
+What we know:  
+- Authentication Methods: Publickey and Password  
+- Possible Naming Convention: j_davis = f_last
+
+What we have:  
+- Personnel Roster: Task 1  
+- Breached Credentials: Task 2  
+
+What we can do:  
+- Credential Stuffing
+
 ---
 ---
 ## Initial Access (MITRE ATT&CK Outline)
