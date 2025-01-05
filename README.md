@@ -1,10 +1,10 @@
 # TryHackMe Walkthroughs
 
-The following articles will provide information on completing some boxes found on THM. Each box will contain four articles (if neccessary):
-  - 'Manual' Walkthrough
-  - Metasploit Walkthrough
+The following articles will provide information on completing some boxes found on THM. Each box will contain three articles:
+  - Attack Walkthrough
+  - Hardening Walkthrough
   - Pentest Report
-  - Hardening the Box Walkthrough
+  
 
 ---
 
