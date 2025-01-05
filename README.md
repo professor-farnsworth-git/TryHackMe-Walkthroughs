@@ -1,6 +1,6 @@
 # TryHackMe Walkthroughs
 
-The following articles will provide information on completing some boxes found on THM. Each box will contain four articles:
+The following articles will provide information on completing some boxes found on THM. Each box will contain four articles (if neccessary):
   - A 'manual' walkthrough
   - A Metasploit walkthrough
   - Pentest Report
@@ -10,9 +10,9 @@ The following articles will provide information on completing some boxes found o
 
 ## Walkthrough Table
 
-| Box Name           | Type    | Difficulty                | Description                                                                                  | Tools                              |
-|--------------------|---------|---------------------------|----------------------------------------------------------------------------------------------|------------------------------------|
-| [Just SSH](Rooms/Just-SSH)           | Linux   | Easy-medium               | Compromise a SSH Server using common attack vectors outlined by MITRE ATT&CK Framework.      | NMAP, Hydra, ssh2John, john/hashcat|
+| Box Name                   | Type    | Difficulty                | Description                                                                                  |
+|----------------------------|---------|---------------------------|----------------------------------------------------------------------------------------------|
+| [Just SSH](Rooms/Just-SSH) | Linux   | Easy-medium               | Compromise a SSH Server using common attack vectors outlined by MITRE ATT&CK Framework.      | 
                                               
 ---
 
