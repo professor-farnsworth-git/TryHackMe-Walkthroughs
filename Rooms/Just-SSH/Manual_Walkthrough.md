@@ -4,10 +4,19 @@ Insert the box image here
 
 ## Overview
 ### Platform: Tryhackme
-### Box Name: Test Box
-### Objective: Test Makrdown formatting for walkthroughs.
-### Identify a clean, concise, and informative driven walkthrough.
-Use MITRE for objectives covered. 
+### Box Name: Just SSH
+### Description: 
+
+---
+## Enumeration (MITRE ATT&CK Outline)
+
+| Techniqe ID                 | Name                          | Tool Used                   |
+|-----------------------------|-------------------------------|-----------------------------|
+| [T1595](https://attack.mitre.org/techniques/T1595/)                       | Active Scanning               | NMAP                        |
+| [T1592](https://attack.mitre.org/techniques/T1592/)                       | Gather Victim Host Information | NMAP                       |
+| [T1591](https://attack.mitre.org/techniques/T1591/)                       | Gather Vicitm Org Information | Breached Creds, Personnel Roster |
+
+---
 
 ## Enumeration
 Run NMAP to discover open ports:
