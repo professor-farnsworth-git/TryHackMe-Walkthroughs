@@ -8,7 +8,7 @@ Insert the box image here
 ### Description: 
 
 ---
-## Enumeration (MITRE ATT&CK Outline)
+## Recon and Enumeration (MITRE ATT&CK Outline)
 
 | Techniqe ID                 | Name                          | Tool Used                   |
 |-----------------------------|-------------------------------|-----------------------------|
@@ -16,9 +16,7 @@ Insert the box image here
 | [T1592](https://attack.mitre.org/techniques/T1592/)                       | Gather Victim Host Information | NMAP                       |
 | [T1591](https://attack.mitre.org/techniques/T1591/)                       | Gather Vicitm Org Information | Breached Creds, Personnel Roster |
 
----
-
-## Enumeration
+### Enumeration
 Run NMAP to discover open ports:
 ```bash
 sudo nmap $ip -Pn -n
@@ -28,15 +26,25 @@ Port 22 (SSH) was the only open port, and confirmed with the all ports scan:
 ```bash
 sudo nmap $ip -p- -Pn -n -T5
 ```
+---
+---
+## Initial Access (MITRE ATT&CK Outline)
 
-## Initial Foothold
+| Techniqe ID                 | Name                          | Tool Used                   |
+|-----------------------------|-------------------------------|-----------------------------|
+| [T1078](https://attack.mitre.org/techniques/T1078/)    | Valid Accounts    |  Hydra, SSH  |
+| [T1110](https://attack.mitre.org/techniques/T1110/004/)   |  Credential Stuffing   |  Hydra   |
+| [T1110](https://attack.mitre.org/techniques/T1110/002/)   | Password Cracking   | ssh2john, john/hashcat  |
+
+### Initial Foothold
 Executed a credential stuffing attack utilizing the identifed users, and breached passwords.
 ```bash
 hydra -L users.txt -P breachedCreds.txt $ip ssh
 ```
 
 SSH Password credentials identified: j_moore : somePassword123
-
+---
+---
 ## Lateral Movement
 
 ### j_moore to sftp
