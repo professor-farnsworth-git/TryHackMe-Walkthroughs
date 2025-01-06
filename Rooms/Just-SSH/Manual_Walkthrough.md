@@ -248,11 +248,11 @@ With the id_rsa passphrase, we can now test j_moore's id_rsa agains the sftp ser
 ```bash
 sftp -i id_rsa sftp@$ip
 ```
-```bash
+<PRE>
 Enter passphrase for key 'id_rsa': 
 Connected to 10.10.64.168.
 sftp> 
-```
+</PRE>
 
 ### sftp, Lateral Move to net-admin
 #### Enumerating SFTP Documents
@@ -262,8 +262,9 @@ Step 1: 'get' copies of all the documents and sift through the information.
 cd uploads
 get -r *
 ```
-
-```bash
+<details> 
+<summary>Example Output</summary>
+<pre>
 Fetching /uploads/conf.bak/ to conf.bak
 Retrieving /uploads/conf.bak
 sw1.config                                                                                                                            100% 1323     1.1MB/s   00:00    
@@ -287,8 +288,9 @@ Ticket#NX-004                                                                   
 Ticket#NX-006                                                                                                                         100%  145   127.6KB/s   00:00    
 Ticket#NX-003                                                                                                                         100%  124    74.1KB/s   00:00    
 Ticket#NX-005                                                                                                                         100%  136    39.3KB/s   00:00    
-Ticket#NX-001                                                                                                                         100%  290   270.2KB/s   00:00
-```
+Ticket#NX-001                                                                                                                         100%  290   270.2KB/s   00:00 
+</pre>
+</details>
 
 
 
