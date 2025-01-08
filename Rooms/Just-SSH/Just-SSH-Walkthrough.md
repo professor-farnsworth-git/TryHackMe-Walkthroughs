@@ -101,6 +101,9 @@ debug1: Will attempt key: /home/not-root/.ssh/id_xmss
 ### What We Can Do
 
 - Craft a credential stuffing attack using breached credentials and the observed naming convention (`f_last`).
+
+---
+
 ## Initial Access (MITRE ATT&CK Outline)
 
 | Technique ID                                                 | Name                | Tool(s) Used |
