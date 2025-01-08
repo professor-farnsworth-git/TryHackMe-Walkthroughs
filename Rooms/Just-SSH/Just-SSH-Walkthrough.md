@@ -315,12 +315,14 @@ aes256-ctrbcrypt
 �i�0��]N%�#��Sssh-rsa��'�+���#:,�}��v�;z�*/f�����[�`�Z8\�w�
 ```
 
+If the output lists aes256-ctrbcrypt (or similar encryption), the key is passphrase-protected and encrypted.
+
 ---
 </details>
 
 #### Cracking SSH Passphrases
 
-**Step 1:** Transfer j_moore's id_rsa to the attack computer.
+**Step 1:** Transfer j_moore's id_rsa to the attack computer.  
 **Step 2:** Utilize ssh2john to output a hash format for John/Hashcat to crack against.
 
 **Command**:
@@ -440,7 +442,7 @@ NSE: [ssh-publickey-acceptance] Failed to authenticate
 NSE: [ssh-publickey-acceptance] Failed to authenticate
 NSE: [ssh-publickey-acceptance] Failed to authenticate
 NSE: [ssh-publickey-acceptance] Failed to authenticate
-NSE: [ssh-publickey-acceptance] Found accepted key: jMoore_id_rsa for user sftp
+NSE: [ssh-publickey-acceptance] Found accepted key: id_rsa_moore for user sftp
 NSE: [ssh-publickey-acceptance] Failed to authenticate
 Nmap scan report for 10.10.166.179
 Host is up (0.22s latency).
@@ -449,7 +451,7 @@ PORT   STATE SERVICE
 22/tcp open  ssh
 | ssh-publickey-acceptance:
 |   Accepted Public Keys:
-|_    Key jMoore_id_rsa accepted for user sftp
+|_    Key id_rsa_moore accepted for user sftp
 
 Nmap done: 1 IP address (1 host up) scanned in 16.10 seconds
 </pre>
