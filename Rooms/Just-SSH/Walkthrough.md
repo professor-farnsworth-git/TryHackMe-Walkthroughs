@@ -234,7 +234,7 @@ Truncated Output:
 
 ---
 
-### j_moore, Lateral Move to SFTP
+### J_moore, Lateral Move to SFTP
 
 Steps:
 
@@ -627,7 +627,7 @@ SSH         10.10.247.86    22     10.10.247.86     [-] sys-admin: Authenticatio
 
 ---
 
-### net-admin, Lateral Movement to sys-admin
+### Net-admin, Lateral Movement to sys-admin
 
 #### Enumeration of the net-admin profile  
 
@@ -727,8 +727,8 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-07 01:33:
 [WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
 [DATA] max 16 tasks per 1 server, overall 16 tasks, 70 login tries (l:10/p:7), ~5 tries per task
 [DATA] attacking ssh://10.10.247.86:22/
-[22][ssh] host: 10.10.247.86   login: j_moore   password: Unplanned8@Chair
-[22][ssh] host: 10.10.247.86   login: m_brown   password: resetMeAfter1Use!*
+[22][ssh] host: 10.10.247.86   login: j_moore   password: *********************
+[22][ssh] host: 10.10.247.86   login: m_brown   password: *********************
 [22][ssh] host: 10.10.247.86   login: sys-admin   password: **********************
 1 of 1 target successfully completed, 3 valid passwords found
 </pre>
@@ -736,7 +736,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-07 01:33:
 
 ---
 
-### sys-admin, Elevate to Root
+### Sys-admin, Elevate to Root
 
 #### Steps:
 
