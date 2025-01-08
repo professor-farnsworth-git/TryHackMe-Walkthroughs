@@ -21,7 +21,7 @@
 
 Steps
 
-1. Perform Active Scanning with NMAP:
+1. Perform Active Scanning with NMAP.  
 Command:
 ```bash
 sudo nmap $ip -Pn -n -oA discScan
@@ -39,7 +39,7 @@ Nmap done: 1 IP address (1 host up) scanned in 2.47 seconds
 </PRE>
 ---
 
-2. Gather Host Information with SSH Debug Mode:
+2. Gather Host Information with SSH Debug Mode.  
 Command:
 ```bash
 ssh -v $ip
@@ -97,7 +97,7 @@ What We Have
 
 What We Can Do
 
-1. Craft a credential stuffing attack using breached credentials and the observed naming convention (f_last).
+- Craft a credential stuffing attack using breached credentials and the observed naming convention (f_last).
 
 ---
 
@@ -163,7 +163,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-05 01:50:
 
 2. **Gain Initial Foothold**
 
-Use the newly found credentials to gain access to the target and retrieve the user flag:  
+Use the newly found credentials to gain access to the target and retrieve the user flag.    
 
 Commands:  
 ```bash
@@ -186,7 +186,7 @@ cat /home/j_moore/userFlag.txt
 
 ### Steps
 
-1. **Internal Recon and Enumeration with LinPEAS**
+**Internal Recon and Enumeration with LinPEAS**
 
 Transfer LinPEAS to the target system and execute it using j_moore's profile:  
 
