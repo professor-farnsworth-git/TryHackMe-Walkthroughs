@@ -104,7 +104,7 @@ What We Can Do
 | Technique ID                                                 | Name                | Tool(s) Used |
 | ------------------------------------------------------------ | ------------------- | ------------ |
 | [T1078](https://attack.mitre.org/techniques/T1078/)          | Valid Accounts      | Hydra, SSH   |
-| [T1110](https://attack.mitre.org/techniques/T1110/004/)T1110 | Credential Stuffing | Hydra        |
+| [T1110](https://attack.mitre.org/techniques/T1110/004/)      | Credential Stuffing | Hydra        |
 
 ---
 
@@ -166,7 +166,7 @@ Use the newly found credentials to gain access to the target and retrieve the us
 Commands:  
 ```bash
 ssh j_moore@$ip  
-ssh m_brown@$ip  
+cat /home/j_moore/userFlag.txt 
 ```
 
 ---
