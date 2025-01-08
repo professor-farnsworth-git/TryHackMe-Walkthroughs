@@ -22,6 +22,7 @@
 Steps
 
 1. Perform Active Scanning with NMAP:
+Command:
 ```bash
 sudo nmap $ip -Pn -n -oA discScan
 ```
@@ -39,10 +40,11 @@ Nmap done: 1 IP address (1 host up) scanned in 2.47 seconds
 ---
 
 2. Gather Host Information with SSH Debug Mode:
+Command:
 ```bash
 ssh -v $ip
 ```
-
+Truncated Output:
 <PRE>
 debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.10
 debug1: SSH2_MSG_SERVICE_ACCEPT received
