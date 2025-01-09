@@ -200,7 +200,6 @@ bash linpeas.sh
 
 **Truncated Output**:
 <PRE>
-```plaintext
 ══╣ Possible private SSH keys were found!  
 /home/j_moore/.ssh/id_rsa  
 /home/sftp/uploads/.temp_keys/id_rsa_backup_script  
@@ -209,7 +208,6 @@ bash linpeas.sh
 
   
 -rw------- 1 sftp sftp_service 3435 Jan  3 01:56 /home/sftp/uploads/.temp_keys/id_rsa_barbara  
-```
 </PRE>
 
 ---
