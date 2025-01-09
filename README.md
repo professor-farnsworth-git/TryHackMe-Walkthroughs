@@ -1,6 +1,6 @@
 # TryHackMe Walkthroughs
 
-Here you'll find walkthroughs to help navigate some of the boxes on TryHackMe (THM). For each box, I’ve put together three articles to outline how I would attack, defend, and write a pentest report for it.  
+A repository for TryHackMe Walkthroughs. Each box will be accompanied by three articles to outline: 
   - Attack Walkthrough
   - Hardening Walkthrough
   - Pentest Report
