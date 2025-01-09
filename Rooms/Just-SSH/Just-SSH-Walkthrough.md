@@ -10,12 +10,12 @@
 
 ## Recon and Enumeration (MITRE ATT&CK Outline)
 
-| Technique ID                                        | Name                               | Tool(s) Used                     |
-| --------------------------------------------------- | ---------------------------------- | -------------------------------- |
-| [T1595](https://attack.mitre.org/techniques/T1595/) | Active Scanning                    | NMAP                             |
-| [T1592](https://attack.mitre.org/techniques/T1592/) | Gather Victim Host Information     | ssh -v                           |
-| [T1591](https://attack.mitre.org/techniques/T1591/) | Gather Victim Org Information      | ssh -v                           |
-| [T1589](https://attack.mitre.org/techniques/T1589/) | Gather Victim Identity Information | Breached Creds, Personnel Roster |
+| Technique ID                                        | Name                               | Tool(s) Used                                              |
+| --------------------------------------------------- | ---------------------------------- | --------------------------------------------------------- |
+| [T1595](https://attack.mitre.org/techniques/T1595/) | Active Scanning                    | [NMAP](https://www.kali.org/tools/nmap/)                  |
+| [T1592](https://attack.mitre.org/techniques/T1592/) | Gather Victim Host Information     | [ssh -v](https://www.kali.org/tools/openssh/#ssh-1)       |
+| [T1591](https://attack.mitre.org/techniques/T1591/) | Gather Victim Org Information      | ssh -v                                                    |
+| [T1589](https://attack.mitre.org/techniques/T1589/) | Gather Victim Identity Information | Breached Creds, Personnel Roster                          |
 
 ---
 
@@ -106,10 +106,10 @@ debug1: Will attempt key: /home/not-root/.ssh/id_xmss
 
 ## Initial Access (MITRE ATT&CK Outline)
 
-| Technique ID                                                 | Name                | Tool(s) Used |
-| ------------------------------------------------------------ | ------------------- | ------------ |
-| [T1078](https://attack.mitre.org/techniques/T1078/)          | Valid Accounts      | Hydra, SSH   |
-| [T1110](https://attack.mitre.org/techniques/T1110/004/)      | Credential Stuffing | Hydra        |
+| Technique ID                                                 | Name                | Tool(s) Used                                      |
+| ------------------------------------------------------------ | ------------------- | ------------------------------------------------- |
+| [T1078](https://attack.mitre.org/techniques/T1078/)          | Valid Accounts      | [Hydra](https://www.kali.org/tools/hydra/), SSH   |
+| [T1110](https://attack.mitre.org/techniques/T1110/004/)      | Credential Stuffing | Hydra                                             |
 
 ---
 
@@ -178,12 +178,12 @@ cat /home/j_moore/userFlag.txt
 
 ## Lateral Movement (MITRE ATT&CK Outline)
 
-| Technique ID                                            | Name                  | Tool(s) Used                                  |
-| ------------------------------------------------------- | --------------------- | ----------------------------------------------|
-| [T1021](https://attack.mitre.org/techniques/T1021/004/) | Remote Services       | SSH                                           |
-| [T1552](https://attack.mitre.org/techniques/T1552/)     | Unsecured Credentials | Manual Enumeration / LinPEAS.sh               |
-| [T1110](https://attack.mitre.org/techniques/T1110/002/) | Password Cracking     | ssh2john, john/hashcat                        |
-| [T1110](https://attack.mitre.org/techniques/T1110/003/) | Password Spraying     | NMAP Scripting Engine, CrackMapExec           |
+| Technique ID                                            | Name                  | Tool(s) Used                                                                         |
+| ------------------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------|
+| [T1021](https://attack.mitre.org/techniques/T1021/004/) | Remote Services       | SSH                                                                                  |
+| [T1552](https://attack.mitre.org/techniques/T1552/)     | Unsecured Credentials | Manual Enumeration / [LinPEAS.sh](https://www.kali.org/tools/peass-ng/#linpeas)      |
+| [T1110](https://attack.mitre.org/techniques/T1110/002/) | Password Cracking     | [ssh2john/john](https://www.kali.org/tools/john/#ssh2john)                           |
+| [T1110](https://attack.mitre.org/techniques/T1110/003/) | Password Spraying     | NMAP Scripting Engine, [CrackMapExec](https://www.kali.org/tools/crackmapexec/)      |
 
 ---
 
@@ -627,11 +627,11 @@ SSH         10.10.247.86    22     10.10.247.86     [-] sys-admin: Authenticatio
 
 ## Privilege Escalation (MITRE ATT&CK Outline)
 
-| Technique ID                                               | Name                                 | Tool(s) Used         |
-|------------------------------------------------------------|--------------------------------------|----------------------|
-| [T1548](https://attack.mitre.org/techniques/T1548/003/)    | Abuse Elevation Control Mechanism    | Sudo Privileges      |
-| [T1556](https://attack.mitre.org/techniques/T1556/)        | Modify Authentication Process        | /etc/ssh/sshd_config |
-| [T1110](https://attack.mitre.org/techniques/T1110/004/)    | Credential Stuffing                  | hydra                |
+| Technique ID                                               | Name                                 | Tool(s) Used                                             |
+|------------------------------------------------------------|--------------------------------------|----------------------------------------------------------|
+| [T1548](https://attack.mitre.org/techniques/T1548/003/)    | Abuse Elevation Control Mechanism    | [Sudo Privileges](https://www.kali.org/tools/sudo/)      |
+| [T1556](https://attack.mitre.org/techniques/T1556/)        | Modify Authentication Process        | /etc/ssh/sshd_config                                     |
+| [T1110](https://attack.mitre.org/techniques/T1110/004/)    | Credential Stuffing                  | hydra                                                    |
 
 ---
 
