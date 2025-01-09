@@ -1,6 +1,6 @@
 # TryHackMe Walkthroughs
 
-A repository for TryHackMe Walkthroughs. Each box will be accompanied by three articles to outline: 
+A repository for TryHackMe Walkthroughs. Each box will be accompanied by three articles: 
   - Attack Walkthrough
   - Hardening Walkthrough
   - Pentest Report
